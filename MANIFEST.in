@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include mva_tracker *.css
+recursive-include mva_tracker *.csv
+recursive-include mva_tracker *.html
+recursive-include mva_tracker *.ico
+recursive-include mva_tracker *.js
+recursive-include mva_tracker *.json
+recursive-include mva_tracker *.md
+recursive-include mva_tracker *.png
+recursive-include mva_tracker *.py
+recursive-include mva_tracker *.svg
+recursive-include mva_tracker *.txt
+recursive-exclude mva_tracker *.pyc
