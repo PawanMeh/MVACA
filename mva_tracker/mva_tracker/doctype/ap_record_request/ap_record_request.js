@@ -3,8 +3,9 @@
 
 frappe.ui.form.on('AP Record Request', {
 	supplier: function(frm) {
-		if (frm.doc.supplier)
-		frappe.call({
+		if (frm.doc.supplier && frm.doc.docstatus !== 1)
+		{
+			frappe.call({
 				method:'frappe.client.get_value',
 				args: {
 							'doctype': 'Supplier',
@@ -21,6 +22,7 @@ frappe.ui.form.on('AP Record Request', {
 			})
 			frm.refresh_field("currency");
 			frm.refresh_field("advance_currency");
+		}
 	},
 	refresh:function(frm) {
 		if(frm.doc.docstatus === 1) {

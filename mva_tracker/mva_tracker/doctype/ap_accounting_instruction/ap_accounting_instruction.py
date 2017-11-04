@@ -15,16 +15,27 @@ class APAccountingInstruction(Document):
 		for accounting_detail in self.accounting_detail:
 			self.ap_total_debit = self.ap_total_debit + accounting_detail.debit
 			self.ap_total_credit = self.ap_total_credit + accounting_detail.credit
-			
-		apr_doc = frappe.get_doc('AP Record Request', self.apr_reference)
-		if apr_doc.apr_status == "AP Instructed":
-			frappe.throw(_("Corresponding AP Accounting instruction is already created for the APR"))
+			if accounting_detail.account:
+				is_group = 0
+				is_group = frappe.db.get_value("Account",{"name":accounting_detail.account},["is_group"])
+				if is_group == 1:
+					frappe.throw(_("Group Account cannot be selected"))
 
 		if self.ap_total_debit != self.ap_total_credit:
 			frappe.throw(_("Total debits should be equal to total credits in accounting detail"))
 
+		if self.apr_reference:
+			apai_check = frappe.db.sql("""select name from `tabAP Accounting Instruction` where apr_reference = %s""",self.apr_reference)
+			if apai_check:
+				name = apai_check[0][0]
+				if self.name == name:
+					pass
+				else:
+					frappe.throw(_("AP Accounting Instruction is already created. Ref : {0}").format(name))
+
+
 	def on_submit(self):
 		self.apai_date = frappe.utils.nowdate()
-		ap_record_ref = frappe.get_doc("AP Record Request",self.apr_reference)
-		ap_record_ref.apr_status = "AP Instructed"
-		ap_record_ref.save()
+		frappe.db.sql("""update `tabAP Accounting Instruction` set apr_status = "Instructed" where name = %s""",self.name)
+		frappe.db.sql("""update `tabAP Record Request` set apr_status = "Instructed" where name = %s""",self.apr_reference)
+		frappe.db.commit()

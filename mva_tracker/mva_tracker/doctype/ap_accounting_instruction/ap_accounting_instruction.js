@@ -3,7 +3,7 @@
 
 frappe.ui.form.on('AP Accounting Instruction', {
 	refresh:function(frm) {
-		if(frm.doc.docstatus == 1) {
+		if(frm.doc.docstatus === 1) {
 			frm.add_custom_button(__('AP Voucher Detail'), function() {
 				frm.events.ap_accounting_instruction(frm)
 			}, __("Make"));

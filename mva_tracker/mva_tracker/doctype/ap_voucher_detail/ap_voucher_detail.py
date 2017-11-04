@@ -10,12 +10,16 @@ from frappe import _
 
 class APVoucherDetail(Document):
 	def validate(self):
-		apr_doc = frappe.get_doc('AP Record Request', self.apr_reference)
-		if apr_doc.apr_status == "AP Recorded":
-			frappe.throw(_("Corresponding AP Voucher Detail is already created for the APR"))
+		if self.apr_reference:
+			apvd_check = frappe.db.sql("""select name from `tabAP Voucher Detail` where apr_reference = %s""",self.apr_reference)
+			if apvd_check:
+				name = apvd_check[0][0]
+				if self.name == name:
+					pass
+				else:
+					frappe.throw(_("AP Voucher Detail is already created. Ref : {0}").format(name))
 		
 	def on_submit(self):
 		self.apvd_date = frappe.utils.nowdate()
-		ap_record_ref = frappe.get_doc("AP Record Request",self.apr_reference)
-		ap_record_ref.apr_status = "AP Recorded"
-		ap_record_ref.save()
+		frappe.db.sql("""update `tabAP Voucher Detail` set apr_status = "Posted" where name = %s""",self.name)
+		frappe.db.sql("""update `tabAP Record Request` set apr_status = "Posted" where name = %s""",self.apr_reference)
