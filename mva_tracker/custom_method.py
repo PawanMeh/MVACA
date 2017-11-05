@@ -55,34 +55,34 @@ def make_wct_detail(source_name, target_doc=None):
 
 @frappe.whitelist()
 def make_cash_dist_instruction(source_name, target_doc=None):
-	doclist = get_mapped_doc("Wire Check Transfer Details", source_name, 	{
-		"Wire Check Transfer Details": {
-			"doctype": "Cash Disbursement Accounting Instruction",
+	doclist = get_mapped_doc("CD Record Request", source_name, 	{
+		"CD Record Request": {
+			"doctype": "CD Accounting Instruction",
 			"validation": {
 				"docstatus": ["=", 1]
 			}
 		},
-		"Wire Check Transfer Voucher Detail": {
-			"doctype": "Cash Distribution Accounting Instruction Detail"
-		}
+		"AP Vouchers Paid": {
+			"doctype": "CD Vouchers Paid"
+		},
 	}, target_doc)
 
 	return doclist
 
 @frappe.whitelist()
 def make_cdvd_detail(source_name, target_doc=None):
-	doclist = get_mapped_doc("Cash Disbursement Accounting Instruction", source_name, 	{
-		"Cash Disbursement Accounting Instruction": {
-			"doctype": "Cash Disbursement Voucher Details",
+	doclist = get_mapped_doc("CD Accounting Instruction", source_name, 	{
+		"CD Accounting Instruction": {
+			"doctype": "CD Voucher Details",
 			"validation": {
 				"docstatus": ["=", 1]
 			}
 		},
-		"Cash Distribution Accounting Instruction Detail": {
-			"doctype": "Cash Distribution AP Details"
+		"CD Accounting Detail": {
+			"doctype": "CDVD Accounting Detail"
 		},
-		"Cash Distribution Accounting": {
-			"doctype": "Cash Distribution CD Details"
+		"CD Vouchers Paid": {
+			"doctype": "CDVD Vouchers Paid"
 		},
 	}, target_doc)
 

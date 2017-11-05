@@ -21,20 +21,20 @@ def get_data():
 			]
 		},
 		{	"module_name": "mva_tracker",
-			"label": _("Payment Process"),
+			"label": _("Disbursement Process"),
 			"icon": "icon-star",
 			"items": [
 				{	"type": "doctype",
-					"name": "Wire Check Transfer Details",
-					"label": "Wire Check Transfer Details",
+					"name": "CD Record Request",
+					"label": "CD Record Request",
 				},
 				{	"type": "doctype",
-					"name": "Cash Disbursement Accounting Instruction",
-					"label": "Cash Disbursement Accounting Instruction",
+					"name": "CD Accounting Instruction",
+					"label": "CD Accounting Instruction",
 				},
 				{	"type": "doctype",
-					"name": "Cash Disbursement Voucher Details",
-					"label": "Cash Disbursement Voucher Details",
+					"name": "CD Voucher Details",
+					"label": "CD Voucher Details",
 				}
 			]
 		}
