@@ -17,7 +17,6 @@ class APRecordRequest(Document):
 					pass
 				else:
 					frappe.throw(_("Duplicate Vendor Inovice No already exists on : {0}").format(name))
-		#VALIDATE for group account in grid
 		name_check = frappe.db.sql("""select name from `tabAP Record Request` where name = %s""",(self.name))
 		if name_check:
 			pass
@@ -25,7 +24,9 @@ class APRecordRequest(Document):
 			self.apr_status = "Initiated"
 
 	def on_submit(self):
-		self.apr_date = frappe.utils.nowdate()
+		#Check for not exists condition
+		#frappe.db.sql("""update `tabAP Record Request` set apr_date = %s, apr_status = "Requested" where name = %s and name not in (select apr_reference from `tabAP Accounting Instruction`)""",(frappe.utils.nowdate(),self.name))
 		doc = frappe.get_doc("AP Record Request",self.name)
+		doc.apr_date = frappe.utils.nowdate()
 		doc.apr_status = "Requested"
 		doc.save()

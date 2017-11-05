@@ -20,6 +20,9 @@ class APVoucherDetail(Document):
 					frappe.throw(_("AP Voucher Detail is already created. Ref : {0}").format(name))
 		
 	def on_submit(self):
-		self.apvd_date = frappe.utils.nowdate()
-		frappe.db.sql("""update `tabAP Voucher Detail` set apr_status = "Posted" where name = %s""",self.name)
-		frappe.db.sql("""update `tabAP Record Request` set apr_status = "Posted" where name = %s""",self.apr_reference)
+		frappe.db.sql("""update `tabAP Voucher Detail` set apr_status = "Posted", apvd_date = %s where name = %s""",(frappe.utils.nowdate(),self.name))
+		frappe.db.sql("""update `tabAP Accounting Instruction` set apr_status = "Posted" where name = %s""",self.name)
+		doc_apr = frappe.get_doc("AP Record Request",self.apr_reference)
+		doc_apr.apr_date = frappe.utils.nowdate()
+		doc_apr.apr_status = "Posted"
+		doc_apr.save()

@@ -23,6 +23,9 @@ class APAccountingInstruction(Document):
 
 		if self.ap_total_debit != self.ap_total_credit:
 			frappe.throw(_("Total debits should be equal to total credits in accounting detail"))
+		
+		if self.ap_total_debit == 0 or self.ap_total_credit == 0:
+			frappe.throw(_("Debit or Credit cannot be zero"))
 
 		if self.apr_reference:
 			apai_check = frappe.db.sql("""select name from `tabAP Accounting Instruction` where apr_reference = %s""",self.apr_reference)
@@ -35,7 +38,9 @@ class APAccountingInstruction(Document):
 
 
 	def on_submit(self):
-		self.apai_date = frappe.utils.nowdate()
-		frappe.db.sql("""update `tabAP Accounting Instruction` set apr_status = "Instructed" where name = %s""",self.name)
-		frappe.db.sql("""update `tabAP Record Request` set apr_status = "Instructed" where name = %s""",self.apr_reference)
-		frappe.db.commit()
+		frappe.db.sql("""update `tabAP Accounting Instruction` set apr_status = "Instructed", api_date = %s where name = %s and name not in (select apr_reference from `tabAP Voucher Detail`)""",(frappe.utils.nowdate(),self.name))
+		doc_apr = frappe.get_doc("AP Record Request",self.apr_reference)
+		doc_apr.apr_date = frappe.utils.nowdate()
+		doc_apr.apr_status = "Instructed"
+		doc_apr.save()
+		#frappe.db.sql("""update `tabAP Record Request` set apr_status = "Instructed" where name = %s""",self.apr_reference)
