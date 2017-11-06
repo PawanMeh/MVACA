@@ -40,7 +40,6 @@ class CDAccountingInstruction(Document):
 	def on_submit(self):
 		frappe.db.sql("""update `tabCD Accounting Instruction` set cdr_status = "Instructed", cdai_date = %s where name = %s and name not in (select cdr_reference from `tabCD Voucher Details`)""",(frappe.utils.nowdate(),self.name))
 		doc_cdr = frappe.get_doc("CD Record Request",self.cdr_reference)
-		doc_cdr.cdr_date = frappe.utils.nowdate()
 		doc_cdr.cdr_status = "Instructed"
 		doc_cdr.save()
 		#frappe.db.sql("""update `tabAP Record Request` set apr_status = "Instructed" where name = %s""",self.apr_reference)

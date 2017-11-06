@@ -40,7 +40,5 @@ class APAccountingInstruction(Document):
 	def on_submit(self):
 		frappe.db.sql("""update `tabAP Accounting Instruction` set apr_status = "Instructed", api_date = %s where name = %s and name not in (select apr_reference from `tabAP Voucher Detail`)""",(frappe.utils.nowdate(),self.name))
 		doc_apr = frappe.get_doc("AP Record Request",self.apr_reference)
-		doc_apr.apr_date = frappe.utils.nowdate()
 		doc_apr.apr_status = "Instructed"
 		doc_apr.save()
-		#frappe.db.sql("""update `tabAP Record Request` set apr_status = "Instructed" where name = %s""",self.apr_reference)
