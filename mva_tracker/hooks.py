@@ -119,4 +119,4 @@ app_license = "MIT"
 # override_whitelisted_methods = {
 # 	"frappe.desk.doctype.event.event.get_events": "mva_tracker.event.get_events"
 # }
-
+fixtures = ["Custom Field","Custom Script","Property Setter"]

@@ -36,5 +36,8 @@ frappe.ui.form.on('CD Record Request', {
 			method: "mva_tracker.custom_method.make_cash_dist_instruction",
 			frm: frm
 		})
-	}
+	},
+	validate: function(frm) {
+			frm.toggle_reqd("ap_vouchers_paid", frm.doc.is_advance === "No");
+		}
 });

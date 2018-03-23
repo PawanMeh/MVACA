@@ -29,5 +29,6 @@ class APVoucherDetail(Document):
 			doc_apai.save()
 			
 		doc_apr = frappe.get_doc("AP Record Request",self.apr_reference)
+		doc_apr.cp_ap_voucher = self.cp_ap_voucher
 		doc_apr.apr_status = "Posted"
 		doc_apr.save()

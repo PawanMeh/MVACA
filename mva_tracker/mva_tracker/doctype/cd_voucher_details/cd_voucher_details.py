@@ -29,5 +29,6 @@ class CDVoucherDetails(Document):
 			doc_cdai.save()
 		doc_cdr = frappe.get_doc("CD Record Request",self.cdr_reference)
 		doc_cdr.cdr_status = "Posted"
+		doc_cdr.cp_voucher = self.cp_voucher
 		doc_cdr.save()
 

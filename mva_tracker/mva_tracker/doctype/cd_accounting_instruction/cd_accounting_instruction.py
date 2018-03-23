@@ -38,6 +38,8 @@ class CDAccountingInstruction(Document):
 
 
 	def on_submit(self):
+		if self.is_advance == "Yes" and (self.document_required == "No" or not self.document_required):
+			frappe.throw(_("In case of advance documents should be verfied"))
 		frappe.db.sql("""update `tabCD Accounting Instruction` set cdr_status = "Instructed", cdai_date = %s where name = %s and name not in (select cdr_reference from `tabCD Voucher Details`)""",(frappe.utils.nowdate(),self.name))
 		doc_cdr = frappe.get_doc("CD Record Request",self.cdr_reference)
 		doc_cdr.cdr_status = "Instructed"
